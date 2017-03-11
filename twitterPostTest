@@ -1,0 +1,29 @@
+import unittest,sqlite3
+
+
+from twitterPost import TwitterPost
+
+
+class TwitterPostTest (unittest.TestCase) :
+
+    def setUp(self):
+        self.tweet = TwitterPost()
+        self.conn = sqlite3.connect(":memory:")
+
+    #test successful retrieve
+    def test_sqliteRetrieveSuccess(self):
+        self.tweet.sqlite_store(self.conn)
+        self.assertEqual(self.tweet.sqlite_retrieve(self.conn,'spanish').items().__sizeof__(),24)
+
+    def test_sqliteRetrievFailure(self):
+        self.assertRaisesRegexp(self.tweet.sqlite_retrieve(self.conn,'spanish'),'AttributeError: ''NoneType'' object has no attribute ''items''')
+
+    def test_getapi(self):
+        self.tweet.sqlite_store(self.conn)
+        self.authcfg=self.tweet.sqlite_retrieve(self.conn, 'spanish')
+        self.apihandle = self.tweet.get_authenticated(self.authcfg)
+        print (self.apihandle.get_status.__code__)
+
+
+if __name__ == ' __main__ ':
+    unittest.main()
