@@ -33,12 +33,12 @@ class TwitterPostTest (unittest.TestCase) :
 
     def test_twitterpost(self):
         print("\nRunning twitter_post test")
-        self.tweet_msg = "Posting twitter test message from unit tests 123 "+ str(random.random())
+        self.tweet_msg = "Posting twitter test message from unit tests  "+ str(random.random())
         self.tweet.twitter_post(self.tweet_msg,"spanish")
 
     def test_twitterpost_failure(self):
         print("\nRunning twitter_post test failure")
-        self.tweet_msg = "Posting twitter test message from unit tests 123 "+ str(random.random())
+        self.tweet_msg = "Posting twitter test message from unit tests  "+ str(random.random())
         self.assertRaisesRegexp(self.tweet.twitter_post(self.tweet_msg,"gibberish"),
                                 "error")
 
