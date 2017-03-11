@@ -1,4 +1,4 @@
-import unittest,sqlite3
+import unittest,sqlite3,random
 
 
 from twitterPost import TwitterPost
@@ -8,22 +8,39 @@ class TwitterPostTest (unittest.TestCase) :
 
     def setUp(self):
         self.tweet = TwitterPost()
-        self.conn = sqlite3.connect(":memory:")
+
 
     #test successful retrieve
     def test_sqliteRetrieveSuccess(self):
-        self.tweet.sqlite_store(self.conn)
-        self.assertEqual(self.tweet.sqlite_retrieve(self.conn,'spanish').items().__sizeof__(),24)
+        print("\nRunning sqllite Data Retrieve Success test")
+        self.conn = sqlite3.connect(":memory:")
+
+        self.assertEqual(self.tweet.sqlite_retrieve('spanish').__getitem__('consumer_key'),'rcIlpeAhFKSXlzhjnWqfkS9x7')
+        self.assertEqual(self.tweet.sqlite_retrieve('spanish').__getitem__('consumer_secret'),'J96cwUhHWX93TvSxO7nBpmnqz8LCGuJLNQVFWKehg1bFQRysQe')
+        self.assertEqual(self.tweet.sqlite_retrieve('spanish').__getitem__('access_token'),'838080768408612868-sLc6Uo8iAbdHrJTeEd5C2pjskaitgq6')
+        self.assertEqual(self.tweet.sqlite_retrieve('spanish').__getitem__('access_token_secret'),'r1lj2ZT20H0aACoxqZdIHNq6nfBoWtCNwZNFrvAB6JOMn')
+
 
     def test_sqliteRetrievFailure(self):
-        self.assertRaisesRegexp(self.tweet.sqlite_retrieve(self.conn,'spanish'),'AttributeError: ''NoneType'' object has no attribute ''items''')
+        print("\nRunning sqllite Data Retrieve Failure test")
+        self.conn = sqlite3.connect(":memory:")
+        self.assertRaisesRegexp(self.tweet.sqlite_retrieve('spanish'),'AttributeError: ''NoneType'' object has no attribute ''items''')
 
     def test_getapi(self):
-        self.tweet.sqlite_store(self.conn)
-        self.authcfg=self.tweet.sqlite_retrieve(self.conn, 'spanish')
+        print("\nRunning getapi test")
+        self.authcfg=self.tweet.sqlite_retrieve('spanish')
         self.apihandle = self.tweet.get_authenticated(self.authcfg)
-        print (self.apihandle.get_status.__code__)
 
+    def test_twitterpost(self):
+        print("\nRunning twitter_post test")
+        self.tweet_msg = "Posting twitter test message from unit tests 123 "+ str(random.random())
+        self.tweet.twitter_post(self.tweet_msg,"spanish")
+
+    def test_twitterpost_failure(self):
+        print("\nRunning twitter_post test failure")
+        self.tweet_msg = "Posting twitter test message from unit tests 123 "+ str(random.random())
+        self.assertRaisesRegexp(self.tweet.twitter_post(self.tweet_msg,"gibberish"),
+                                "error")
 
 if __name__ == ' __main__ ':
     unittest.main()
