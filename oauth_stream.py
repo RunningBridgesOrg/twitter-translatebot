@@ -7,11 +7,6 @@ from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
 from tweepy import Stream
 
-consumer_key="***REMOVED***"
-consumer_secret="***REMOVED***"
-access_token="***REMOVED***"
-access_token_secret="***REMOVED***"
-
 class MyStreamListener(tweepy.StreamListener):
 	"""A listener handles tweets that are received from the stream.
 	This is a basic listener that just prints received tweets to stdout
