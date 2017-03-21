@@ -10,17 +10,20 @@ from tweepy.streaming import StreamListener
 from tweepy import Stream
 import json
 
-this_id = '838107760721985536'
+this_id = ['838107760721985536','25073877']
 class MyStreamListener(tweepy.StreamListener):
     def on_data(self, data):
         #print (data)
         all_data = json.loads(data)
-
         tweet_obj={}
-        tweet_obj['text'] = all_data['text']
-        tweet_obj['lang'] = all_data['lang']
-        tweet_obj['created_at'] = all_data['created_at']
-        print (tweet_obj)
+        author = all_data['user']['id_str']
+        #print (author)
+        #print (this_id)
+        if(author in this_id) :
+            print("same?")
+            tweet_obj['text'] = all_data['text']
+            tweet_obj['lang'] = all_data['lang']
+            print (tweet_obj)
         return tweet_obj
 
     def on_error(self,status):
@@ -45,6 +48,11 @@ def get_authenticated():
     else:
         print ("%s: %s at %s" % ('Error','config data is null',__file__))
 
+def get_userlist():
+    #list of users to follow. Added value has to be "id" not username.
+    users = ['25073877','838107760721985536']
+    return users;
+
 
 def main():
 
@@ -52,10 +60,8 @@ def main():
 
     my_stream_listener = MyStreamListener();
     my_stream = tweepy.Stream(auth = api.auth,listener=my_stream_listener)
-
-    #list of users to follow. Added value has to be "id" not username.
-    follow_users = ['25073877','838107760721985536']
-    my_stream.filter(follow= follow_users, async=True)
+    users = get_userlist()
+    my_stream.filter(follow= users, async=True)
 
 if __name__ == "__main__":
     main()
