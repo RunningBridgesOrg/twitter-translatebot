@@ -19,18 +19,22 @@ class MyStreamListener(tweepy.StreamListener):
         author = all_data['user']['id_str']
         #print (author)
         #print (this_id)
+
         if(author in this_id) :
             print("same?")
             tweet_obj['text'] = all_data['text']
             tweet_obj['lang'] = all_data['lang']
             print (tweet_obj)
+        # send it to queue
         return tweet_obj
 
     def on_error(self,status):
         print(status)
 
+class TwitterListener :
+    def __init__:
 
-def read_cfg_from_file():
+    def read_cfg_from_file():
     cfg = {}
     with open("cfg.txt", "r") as f:
         for line in f:
@@ -38,30 +42,29 @@ def read_cfg_from_file():
             cfg[key] = value
     return cfg
 
-#athenticated and get twitter handle
-def get_authenticated():
-    cfg = read_cfg_from_file()
-    if cfg is not None:
-        auth = tweepy.OAuthHandler(cfg['consumer_key'],cfg['consumer_secret'])
-        auth.set_access_token(cfg['access_token'],cfg['access_token_secret'])
-        return tweepy.API(auth)
-    else:
-        print ("%s: %s at %s" % ('Error','config data is null',__file__))
+    #athenticated and get twitter handle
+    def get_authenticated():
+        #later reading from DB
+        cfg = read_cfg_from_file()
+        if cfg is not None:
+            auth = tweepy.OAuthHandler(cfg['consumer_key'],cfg['consumer_secret'])
+            auth.set_access_token(cfg['access_token'],cfg['access_token_secret'])
+            return tweepy.API(auth)
+        else:
+            print ("%s: %s at %s" % ('Error','config data is null',__file__))
 
-def get_userlist():
-    #list of users to follow. Added value has to be "id" not username.
-    users = ['25073877','838107760721985536']
-    return users;
+    def get_userlist():
+        #list of users to follow. Added value has to be "id" not username.
+        #reading from DB
+        users = ['25073877','838107760721985536']
+        return users;
 
+    def main():
+        api = get_authenticated()
+        my_stream_listener = MyStreamListener();
+        my_stream = tweepy.Stream(auth = api.auth,listener=my_stream_listener)
+        users = get_userlist()
+        my_stream.filter(follow= users, async=True)
 
-def main():
-
-    api = get_authenticated()
-
-    my_stream_listener = MyStreamListener();
-    my_stream = tweepy.Stream(auth = api.auth,listener=my_stream_listener)
-    users = get_userlist()
-    my_stream.filter(follow= users, async=True)
-
-if __name__ == "__main__":
-    main()
+        if __name__ == "__main__":
+            main()
