@@ -33,12 +33,15 @@ def get_input_tweets():
     return listOfTweets
 
 def translateTweets(tweetsToTranslate,api_key):
+    translatedTweets = {}
     for tweet in tweetsToTranslate:
         payload = {'q':tweet['text'],'target':tweet['lang'],'key':api_key}
         resp=requests.get('https://www.googleapis.com/language/translate/v2',params=payload)
         print resp.text
         response_dict = resp.json()
         print "%s ---> %s\n"%(tweet['text'],response_dict["data"]["translations"][0]["translatedText"])
+	translatedTweets[tweet['text']] = response_dict["data"]["translations"][0]["translatedText"]
+    print translatedTweets
 
 
 def main():
