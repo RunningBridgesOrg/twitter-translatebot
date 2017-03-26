@@ -9,8 +9,8 @@ def get_authenticated():
 def get_input_tweets():
     listOfTweets = []
     tweet1 = {}
-    tweet1['text'] = "I like cake"
-    tweet1['lang'] = "es"
+    tweet1['text'] = "Let them eat cake"
+    tweet1['lang'] = "fr"
 
     tweet2 = {}
     tweet2['text'] = "Doing demonstration is hard"
@@ -35,6 +35,7 @@ def translateTweets(tweetsToTranslate,api_key):
     for tweet in tweetsToTranslate:
         payload = {'q':tweet['text'],'target':tweet['lang'],'key':api_key}
         resp=requests.get('https://www.googleapis.com/language/translate/v2',params=payload)
+        print resp.text
         response_dict = resp.json()
         print "%s ---> %s\n"%(tweet['text'],response_dict["data"]["translations"][0]["translatedText"])
 
