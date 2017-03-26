@@ -1,5 +1,6 @@
 import requests,json
 
+#Function for getting API key from a stored file "apiKey.txt"
 def get_authenticated():
     with open("apiKey.txt","r") as f:
         for line in f:
