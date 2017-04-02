@@ -80,8 +80,12 @@ def translateTweets(tweetsToTranslate,api_key):
         resp=requests.get('https://www.googleapis.com/language/translate/v2',params=payload)
         #print resp.text
         response_dict = resp.json()
-        #print "%s ---> %s\n"%(tweet['text'],response_dict["data"]["translations"][0]["translatedText"])
-        translatedTweets[tweet['text']] = response_dict["data"]["translations"][0]["translatedText"]
+        try:
+            #print "%s ---> %s\n"%(tweet['text'],response_dict["data"]["translations"][0]["translatedText"])
+            translatedTweets[tweet['text']] = response_dict["data"]["translations"][0]["translatedText"]
+        except KeyError:
+            if "error" in response_dict.keys():
+                print "Error Code:%s Message:%s Reason:%s"%(response_dict["error"]["code"],response_dict["error"]["message"],response_dict["error"]["errors"][0]["reason"])
     return translatedTweets
 
 
