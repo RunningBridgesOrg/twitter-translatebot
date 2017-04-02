@@ -29,8 +29,8 @@ class MyStreamListener(tweepy.StreamListener):
     def on_error(self,status):
         print(status)
 
-<<<<<<< Updated upstream
-=======
+
+
 class TwitterListener:
     def read_cfg_from_file(self):
         cfg = {}
@@ -38,16 +38,6 @@ class TwitterListener:
         cfg['consumer_secret'] = '4OgHYiQz9J46vIMiazANxu5A3l6cF2vL47i7xlXNpthdh52WPz'
         cfg['access_token'] = '***REMOVED***'
         cfg['access_token_secret'] = '***REMOVED***'
-
->>>>>>> Stashed changes
-
-def read_cfg_from_file():
-    cfg = {}
-    with open("cfg.txt", "r") as f:
-        for line in f:
-            key, value = line.strip().split(':')
-            cfg[key] = value
-    return cfg
 
 #athenticated and get twitter handle
 def get_authenticated():
