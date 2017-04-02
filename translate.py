@@ -3,6 +3,7 @@
    Takes string of text to be translated, the languge it needs to be translated to, and the API key of the user accessing the google translate, makes a request to google translate. 
 
 """
+import collections
 import requests,json
 
 def get_authenticated():
@@ -74,7 +75,7 @@ def translateTweets(tweetsToTranslate,api_key):
        - Put translated text into a dictionary structure, where key is the string to translate, and value is the translation. Return result. 
     """
 
-    translatedTweets = {}
+    translatedTweets = collections.OrderedDict()
     for tweet in tweetsToTranslate:
         payload = {'q':tweet['text'],'target':tweet['lang'],'key':api_key}
         resp=requests.get('https://www.googleapis.com/language/translate/v2',params=payload)
