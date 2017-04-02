@@ -6,7 +6,7 @@
 import collections
 import requests,json
 
-def get_authenticated():
+def get_authenticated(fName):
     """
      Inputs: 
        - None
@@ -15,7 +15,6 @@ def get_authenticated():
      Process:
        - Read in a pre-existing text file that should only have 1 line that contains the API key  associated with a user.  
     """
-    fName = "apiKey.txt"
     try:
         with open(fName,"r") as f:
             key = ""
@@ -76,6 +75,7 @@ def translateTweets(tweetsToTranslate,api_key):
     """
 
     translatedTweets = collections.OrderedDict()
+    responseErrorCode = ""
     for tweet in tweetsToTranslate:
         payload = {'q':tweet['text'],'target':tweet['lang'],'key':api_key}
         resp=requests.get('https://www.googleapis.com/language/translate/v2',params=payload)
@@ -87,18 +87,21 @@ def translateTweets(tweetsToTranslate,api_key):
         except KeyError:
             if "error" in response_dict.keys():
                 print "Error Code:%s Message:%s Reason:%s"%(response_dict["error"]["code"],response_dict["error"]["message"],response_dict["error"]["errors"][0]["reason"])
-    return translatedTweets
+                responseErrorCode = response_dict["error"]["code"] 
+    return translatedTweets, responseErrorCode
 
 
 def main():
 
     tweetsToTranslate = get_input_tweets()
 
-    api_key = get_authenticated()
+    fName = "apiKey.txt"
+    api_key = get_authenticated(fName)
 
     if api_key:
-        translated = translateTweets(tweetsToTranslate,api_key)
+        translated,responseErrorCode = translateTweets(tweetsToTranslate,api_key)
     
+        print translated, responseErrorCode
         #debug prints.
         for key,value in translated.iteritems():
             print "%s (%s) ---> %s (%s)\n"%(key,type(key),value,type(value))
