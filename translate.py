@@ -14,10 +14,19 @@ def get_authenticated():
      Process:
        - Read in a pre-existing text file that should only have 1 line that contains the API key  associated with a user.  
     """
-    with open("apiKey.txt","r") as f:
-        for line in f:
-            key = line.strip()
-        return key
+    fName = "apiKey.txt"
+    try:
+        with open(fName,"r") as f:
+            key = ""
+            for line in f:
+                key = line.strip()
+            
+            #Error condition checking for existing key.
+            if not key:
+                print "No api key is found"
+            return key
+    except IOError:
+        print "Could not read file: '%s'"%(fName)
 
 def get_input_tweets():
     """
@@ -72,26 +81,22 @@ def translateTweets(tweetsToTranslate,api_key):
         #print resp.text
         response_dict = resp.json()
         #print "%s ---> %s\n"%(tweet['text'],response_dict["data"]["translations"][0]["translatedText"])
-	translatedTweets[tweet['text']] = response_dict["data"]["translations"][0]["translatedText"]
+        translatedTweets[tweet['text']] = response_dict["data"]["translations"][0]["translatedText"]
     return translatedTweets
 
 
 def main():
 
-    api_key = get_authenticated()
-    #Error condition checking for existing key.
-    if not api_key:
-        print "No api key is found"
-
-    #Get input tweets
     tweetsToTranslate = get_input_tweets()
 
-    #Translate!
-    translated = translateTweets(tweetsToTranslate,api_key)
+    api_key = get_authenticated()
+
+    if api_key:
+        translated = translateTweets(tweetsToTranslate,api_key)
     
-    #debug prints.
-    for key,value in translated.iteritems():
-	print "%s (%s) ---> %s (%s)\n"%(key,type(key),value,type(value))
+        #debug prints.
+        for key,value in translated.iteritems():
+            print "%s (%s) ---> %s (%s)\n"%(key,type(key),value,type(value))
     
 
 if __name__ == "__main__":
